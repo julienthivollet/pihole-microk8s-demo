@@ -81,7 +81,7 @@ metadata:
   name: pihole-default
   namespace: pihole-default
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: pihole-default
@@ -100,18 +100,18 @@ spec:
         - name: TZ
           value: Europe/London
         - name: WEBPASSWORD
-          value: password
+          value: password 
         - name: DNS1
-          value: 185.228.168.168
+          value: 1.1.1.1 
         - name: DNS2
-          value: 185.228.169.168
+          value: 1.0.0.1 
         - name: CONDITIONAL_FORWARDING
           value: 'true'
         - name: CONDITIONAL_FORWARDING_DOMAIN
           value: webster.home
         - name: CONDITIONAL_FORWARDING_IP
           value: 192.168.1.254
-        image: pihole/pihole:4.3.2-1
+        image: pihole/pihole:latest
         imagePullPolicy: IfNotPresent
         name: pihole-default
         ports:
@@ -130,13 +130,6 @@ spec:
         - name: https
           containerPort: 443
           protocol: TCP
-        resources:
-          requests:
-            cpu: "20m"
-            memory: "512Mi"
-          limits:
-            cpu: "250m"
-            memory: "896Mi"
         readinessProbe:
           exec:
             command: ['dig', '@127.0.0.1', 'cnn.com']
@@ -151,24 +144,6 @@ spec:
         volumeMounts:
         - name: etc-pihole
           mountPath: /etc/pihole
-        - name: etc-dnsmasq
-          mountPath: /etc/dnsmasq.d
-        - name: var-log
-          mountPath: /var/log
-        - name: var-log-lighttpd
-          mountPath: /var/log/lighttpd
-        - name: ftlconf
-          mountPath: /etc/pihole/pihole-FTL.conf
-          subPath: pihole-FTL.conf
-        - name: regex
-          mountPath: /etc/pihole/regex.list
-          subPath: regex.list
-        - name: whitelist
-          mountPath: /etc/pihole/whitelist.txt
-          subPath: whitelist.txt
-        - name: adlists
-          mountPath: /etc/pihole/adlists.list
-          subPath: adlists.list
       restartPolicy: Always
       volumes:
       - name: etc-pihole
@@ -224,7 +199,7 @@ spec:
     name: dnsudp
     targetPort: 53
   type: LoadBalancer
-  loadBalancerIP: 192.168.1.140
+  loadBalancerIP: 192.168.1.210
 ---
 kind: Service
 apiVersion: v1
@@ -246,4 +221,4 @@ spec:
     name: web
     targetPort: 80
   type: LoadBalancer
-  loadBalancerIP: 192.168.1.140
+  loadBalancerIP: 192.168.1.210
